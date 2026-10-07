@@ -1,0 +1,84 @@
+{
+  "count": 26034900,
+  "next": "https://zakup.gov.kz/api/core/api/public/lots/?limit=1&offset=1&system_id=1",
+  "previous": null,
+  "facets": {},
+  "results": [
+    {
+      "total_price": 17241379.31,
+      "customers": [
+        {
+          "id": 8208,
+          "name_ru": "Коммунальное государственное учреждение \"Женская гимназия\" отдела образования города Темиртау управления образования Карагандинской области",
+          "name_kk": "Қарағанды облысы білім басқармасының Теміртау қаласы білім бөлімінің \"Қыздар гимназиясы\" коммуналдық мемлекеттік мекемесі",
+          "bin": "970840003360"
+        }
+      ],
+      "announcement_id": 40745436,
+      "description_ru": null,
+      "purchase_method_id": 11,
+      "status_name": "Опубликован",
+      "system": {
+        "name": "ЭГЗ",
+        "id": 1
+      },
+      "purchase_subject_id": [
+        1
+      ],
+      "organization_name": "Коммунальное государственное учреждение \"Женская гимназия\" отдела образования города Темиртау управления образования Карагандинской области",
+      "announcement_number": "17712609-2",
+      "id": 61182602,
+      "external_id": 43519528,
+      "enstru_key": "329953.000.000000",
+      "announcement_publish_date": "2026-10-07T19:04:18+00:00",
+      "dumping_price": 17241379.31,
+      "results_publication_date": null,
+      "name_kk": null,
+      "delivery_addresses": [
+        {
+          "id": 9845,
+          "code": "352410000",
+          "name_ru": "Карагандинская область, г.Темиртау",
+          "name_kk": "Қарағанды облысы, Теміртау қ."
+        }
+      ],
+      "offer_end_date": "2026-10-16T04:30:00+00:00",
+      "plan_items": [
+        {
+          "id": 100567330
+        }
+      ],
+      "plan_year_id": [
+        12
+      ],
+      "announcement_name_ru": "Приобретение кабинета информатики. Кабинет учебный с материально-техническим оснащением.",
+      "offer_start_date": "2026-10-09T04:00:00+00:00",
+      "announcement_number_key": "17712609-2",
+      "name_ru": null,
+      "enstrus": [
+        {
+          "id": 49709,
+          "code": "329953.000.000000",
+          "name_ru": "Кабинет учебный",
+          "name_kk": "Оқу бөлмесі",
+          "short_description_ru": "с материально-техническим оснащением",
+          "short_description_kk": "материалдық-техникалық жабдықтаумен"
+        }
+      ],
+      "quantity": 1.0,
+      "description_kk": null,
+      "purchase_method_name": "Открытый конкурс",
+      "status": {
+        "name": "Опубликован",
+        "is_active": true,
+        "code": null,
+        "id": 6
+      },
+      "is_among_disabled": false,
+      "announcement_external_id": 17746277,
+      "lot_number_key": "88101676-ОК1",
+      "lot_number": "88101676-ОК1",
+      "announcement_name_kk": "Информатика кабинетін сатып алу. Материалдық-техникалық жабдықтармен жабдықталған оқу кабинеті."
+    }
+  ]
+}

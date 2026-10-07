@@ -1,0 +1,724 @@
+[
+  {
+    "id": 241492780,
+    "external_id": 99054803,
+    "group": {
+      "id": 970,
+      "name": "Конкурсная документация ",
+      "is_require_suppliers": false,
+      "is_require_subjects": true,
+      "is_visible_suppliers": false,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 6,
+        "name": "Общие документы",
+        "name_ru": "Общие документы",
+        "name_kk": "Общие документы kz",
+        "egz_code": "3",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "1",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": [
+      {
+        "id": 134566696,
+        "original_filepath": null,
+        "filepath": null,
+        "original_name": null,
+        "name": null,
+        "external_id": 66283135,
+        "category": {
+          "id": 6,
+          "name": "Общие документы",
+          "name_ru": "Общие документы",
+          "name_kk": "Общие документы kz",
+          "egz_code": "3",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "group": {
+          "id": 970,
+          "name": "Конкурсная документация ",
+          "is_require_suppliers": false,
+          "is_require_subjects": true,
+          "is_visible_suppliers": false,
+          "is_visible_subjects": true,
+          "template_file": null,
+          "category": {
+            "id": 6,
+            "name": "Общие документы",
+            "name_ru": "Общие документы",
+            "name_kk": "Общие документы kz",
+            "egz_code": "3",
+            "mtw_code": null,
+            "skk_code": null
+          },
+          "egz_code": "1",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "lot": null,
+        "file": {
+          "file_url": "https://v3bl.goszakup.gov.kz/files/download_file/316051898/226886603/",
+          "filename": "konkurs_doc_17712609.pdf",
+          "uuid": "b1803ce8-02e3-4741-ad32-53130585533a",
+          "timestamp": 1790769835,
+          "external_id": "316051898",
+          "validation_status": {
+            "signature": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "av": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "final": 1
+          },
+          "uploaded_by": null,
+          "organization": 8208
+        }
+      }
+    ]
+  },
+  {
+    "id": 241492781,
+    "external_id": 99054804,
+    "group": {
+      "id": 971,
+      "name": "Проект договора об электронных закупках",
+      "is_require_suppliers": false,
+      "is_require_subjects": true,
+      "is_visible_suppliers": false,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 6,
+        "name": "Общие документы",
+        "name_ru": "Общие документы",
+        "name_kk": "Общие документы kz",
+        "egz_code": "3",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "2",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": [
+      {
+        "id": 134566699,
+        "original_filepath": null,
+        "filepath": null,
+        "original_name": null,
+        "name": null,
+        "external_id": 66283138,
+        "category": {
+          "id": 6,
+          "name": "Общие документы",
+          "name_ru": "Общие документы",
+          "name_kk": "Общие документы kz",
+          "egz_code": "3",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "group": {
+          "id": 971,
+          "name": "Проект договора об электронных закупках",
+          "is_require_suppliers": false,
+          "is_require_subjects": true,
+          "is_visible_suppliers": false,
+          "is_visible_subjects": true,
+          "template_file": null,
+          "category": {
+            "id": 6,
+            "name": "Общие документы",
+            "name_ru": "Общие документы",
+            "name_kk": "Общие документы kz",
+            "egz_code": "3",
+            "mtw_code": null,
+            "skk_code": null
+          },
+          "egz_code": "2",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "lot": null,
+        "file": {
+          "file_url": "https://v3bl.goszakup.gov.kz/files/download_file/316052050/226886735/",
+          "filename": "contract_project_17712609.pdf",
+          "uuid": "8b6aebf0-cd85-4dc6-be43-67cd74db8685",
+          "timestamp": 1790769904,
+          "external_id": "316052050",
+          "validation_status": {
+            "signature": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "av": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "final": 1
+          },
+          "uploaded_by": null,
+          "organization": 8208
+        }
+      }
+    ]
+  },
+  {
+    "id": 241492782,
+    "external_id": 99054805,
+    "group": {
+      "id": 1428,
+      "name": "Приложение 1 (Перечень лотов и условия поставки товаров, выполнения работ, оказания услуг)",
+      "is_require_suppliers": true,
+      "is_require_subjects": true,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 6,
+        "name": "Общие документы",
+        "name_ru": "Общие документы",
+        "name_kk": "Общие документы kz",
+        "egz_code": "3",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "1253",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": true,
+    "files": [
+      {
+        "id": 134566695,
+        "original_filepath": null,
+        "filepath": null,
+        "original_name": null,
+        "name": null,
+        "external_id": 66283134,
+        "category": {
+          "id": 6,
+          "name": "Общие документы",
+          "name_ru": "Общие документы",
+          "name_kk": "Общие документы kz",
+          "egz_code": "3",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "group": {
+          "id": 1428,
+          "name": "Приложение 1 (Перечень лотов и условия поставки товаров, выполнения работ, оказания услуг)",
+          "is_require_suppliers": true,
+          "is_require_subjects": true,
+          "is_visible_suppliers": true,
+          "is_visible_subjects": true,
+          "template_file": null,
+          "category": {
+            "id": 6,
+            "name": "Общие документы",
+            "name_ru": "Общие документы",
+            "name_kk": "Общие документы kz",
+            "egz_code": "3",
+            "mtw_code": null,
+            "skk_code": null
+          },
+          "egz_code": "1253",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "lot": null,
+        "file": {
+          "file_url": "https://v3bl.goszakup.gov.kz/files/download_file/316051897/226886602/",
+          "filename": "konkurs_lots_2022_17712609.pdf",
+          "uuid": "0332cf23-08c1-4c81-82ac-13bd1892fcaa",
+          "timestamp": 1790769835,
+          "external_id": "316051897",
+          "validation_status": {
+            "signature": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "av": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "final": 1
+          },
+          "uploaded_by": null,
+          "organization": 8208
+        }
+      }
+    ]
+  },
+  {
+    "id": 241492783,
+    "external_id": 99054806,
+    "group": {
+      "id": 1712,
+      "name": "Приложение 5 (Квалификационные требования, предъявляемые к потенциальному поставщику при осуществлении государственных закупок товаров)",
+      "is_require_suppliers": false,
+      "is_require_subjects": true,
+      "is_visible_suppliers": false,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 6,
+        "name": "Общие документы",
+        "name_ru": "Общие документы",
+        "name_kk": "Общие документы kz",
+        "egz_code": "3",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "3323",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": [
+      {
+        "id": 134566698,
+        "original_filepath": null,
+        "filepath": null,
+        "original_name": null,
+        "name": null,
+        "external_id": 66283137,
+        "category": {
+          "id": 6,
+          "name": "Общие документы",
+          "name_ru": "Общие документы",
+          "name_kk": "Общие документы kz",
+          "egz_code": "3",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "group": {
+          "id": 1712,
+          "name": "Приложение 5 (Квалификационные требования, предъявляемые к потенциальному поставщику при осуществлении государственных закупок товаров)",
+          "is_require_suppliers": false,
+          "is_require_subjects": true,
+          "is_visible_suppliers": false,
+          "is_visible_subjects": true,
+          "template_file": null,
+          "category": {
+            "id": 6,
+            "name": "Общие документы",
+            "name_ru": "Общие документы",
+            "name_kk": "Общие документы kz",
+            "egz_code": "3",
+            "mtw_code": null,
+            "skk_code": null
+          },
+          "egz_code": "3323",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "lot": {
+          "id": 61182602,
+          "lot_number": "88101676-ОК1",
+          "name": null,
+          "name_ru": null,
+          "name_kk": null,
+          "total_price": 17241379.31,
+          "external_id": 43519528,
+          "status": {
+            "id": 6,
+            "code": null,
+            "name": "Опубликован",
+            "is_active": true,
+            "egz_code": "210",
+            "mtw_code": "5",
+            "skk_code": "PUBLISHED"
+          }
+        },
+        "file": {
+          "file_url": "https://v3bl.goszakup.gov.kz/files/download_file/316052252/226886908/",
+          "filename": "appendix_4_2022_17712609.pdf",
+          "uuid": "5ba3a50d-0c11-4431-a9c1-b83c6462b7b1",
+          "timestamp": 1790769986,
+          "external_id": "316052252",
+          "validation_status": {
+            "signature": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "av": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "final": 1
+          },
+          "uploaded_by": null,
+          "organization": 8208
+        }
+      }
+    ]
+  },
+  {
+    "id": 241492784,
+    "external_id": 99054807,
+    "group": {
+      "id": 1713,
+      "name": "Приложение 13 (Техническая спецификация закупаемых товаров)",
+      "is_require_suppliers": true,
+      "is_require_subjects": true,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 5,
+        "name": "Документы специальных квалификационных требований",
+        "name_ru": "Документы специальных квалификационных требований",
+        "name_kk": "Документы специальных квалификационных требований kz",
+        "egz_code": "2",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "3325",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": true,
+    "files": [
+      {
+        "id": 134566828,
+        "original_filepath": null,
+        "filepath": null,
+        "original_name": null,
+        "name": null,
+        "external_id": 66283267,
+        "category": {
+          "id": 5,
+          "name": "Документы специальных квалификационных требований",
+          "name_ru": "Документы специальных квалификационных требований",
+          "name_kk": "Документы специальных квалификационных требований kz",
+          "egz_code": "2",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "group": {
+          "id": 1713,
+          "name": "Приложение 13 (Техническая спецификация закупаемых товаров)",
+          "is_require_suppliers": true,
+          "is_require_subjects": true,
+          "is_visible_suppliers": true,
+          "is_visible_subjects": true,
+          "template_file": null,
+          "category": {
+            "id": 5,
+            "name": "Документы специальных квалификационных требований",
+            "name_ru": "Документы специальных квалификационных требований",
+            "name_kk": "Документы специальных квалификационных требований kz",
+            "egz_code": "2",
+            "mtw_code": null,
+            "skk_code": null
+          },
+          "egz_code": "3325",
+          "mtw_code": null,
+          "skk_code": null
+        },
+        "lot": {
+          "id": 61182602,
+          "lot_number": "88101676-ОК1",
+          "name": null,
+          "name_ru": null,
+          "name_kk": null,
+          "total_price": 17241379.31,
+          "external_id": 43519528,
+          "status": {
+            "id": 6,
+            "code": null,
+            "name": "Опубликован",
+            "is_active": true,
+            "egz_code": "210",
+            "mtw_code": "5",
+            "skk_code": "PUBLISHED"
+          }
+        },
+        "file": {
+          "file_url": "https://v3bl.goszakup.gov.kz/files/download_file/316534967/227265198/",
+          "filename": "techspec_17712609_43519528.pdf",
+          "uuid": "9cc4eeba-6665-428c-8955-421dce422ab5",
+          "timestamp": 1791399651,
+          "external_id": "316534967",
+          "validation_status": {
+            "signature": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "av": {
+              "need": null,
+              "check": null,
+              "text": null
+            },
+            "final": 1
+          },
+          "uploaded_by": null,
+          "organization": 8208
+        }
+      }
+    ]
+  },
+  {
+    "id": 241492785,
+    "external_id": 99054808,
+    "group": {
+      "id": 1791,
+      "name": "Приложение 4 (Информация о бенефициарном владении потенциального поставщика)",
+      "is_require_suppliers": true,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": false,
+      "template_file": null,
+      "category": {
+        "id": 5,
+        "name": "Документы специальных квалификационных требований",
+        "name_ru": "Документы специальных квалификационных требований",
+        "name_kk": "Документы специальных квалификационных требований kz",
+        "egz_code": "2",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "3359",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": true,
+    "files": null
+  },
+  {
+    "id": 241492786,
+    "external_id": 99054809,
+    "group": {
+      "id": 1177,
+      "name": "Дополнительные файлы для тех. спецификации",
+      "is_require_suppliers": false,
+      "is_require_subjects": false,
+      "is_visible_suppliers": false,
+      "is_visible_subjects": false,
+      "template_file": null,
+      "category": {
+        "id": 6,
+        "name": "Общие документы",
+        "name_ru": "Общие документы",
+        "name_kk": "Общие документы kz",
+        "egz_code": "3",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "757",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": null
+  },
+  {
+    "id": 241492787,
+    "external_id": 99054810,
+    "group": null,
+    "is_require_suppliers": true,
+    "files": null
+  },
+  {
+    "id": 241492788,
+    "external_id": 99054811,
+    "group": {
+      "id": 1714,
+      "name": "Приложение 9 (Сведения о квалификации и критериях, влияющих на конкурсное ценовое предложение при закупках товаров)",
+      "is_require_suppliers": true,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": {
+        "id": 60,
+        "name": "Приложение 9 (Сведения о квалификации и критериях, влияющих на конкурсное ценовое предложение при закупках товаров)",
+        "name_ru": "Приложение 9 (Сведения о квалификации и критериях, влияющих на конкурсное ценовое предложение при закупках товаров)",
+        "name_kk": null,
+        "filename": "appendix_9.docx",
+        "file_url": "https://v3bl.goszakup.gov.kz/uploads/template/appendix_9.docx",
+        "egz_code": "120",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "category": {
+        "id": 5,
+        "name": "Документы специальных квалификационных требований",
+        "name_ru": "Документы специальных квалификационных требований",
+        "name_kk": "Документы специальных квалификационных требований kz",
+        "egz_code": "2",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "3326",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": true,
+    "files": null
+  },
+  {
+    "id": 241492789,
+    "external_id": 99054812,
+    "group": {
+      "id": 1716,
+      "name": "Приложение 19 (Обеспечение заявки)",
+      "is_require_suppliers": true,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": {
+        "id": 62,
+        "name": "Приложение 19 (Обеспечение заявки)",
+        "name_ru": "Приложение 19 (Обеспечение заявки)",
+        "name_kk": null,
+        "filename": "appendix_19.docx",
+        "file_url": "https://v3bl.goszakup.gov.kz/uploads/template/appendix_19.docx",
+        "egz_code": "122",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "category": {
+        "id": 7,
+        "name": "Документы платежеспособности",
+        "name_ru": "Документы платежеспособности",
+        "name_kk": "Документы платежеспособности kz",
+        "egz_code": "4",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "3328",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": true,
+    "files": null
+  },
+  {
+    "id": 241492790,
+    "external_id": 99054813,
+    "group": {
+      "id": 986,
+      "name": "Разрешения первой категории (Лицензии)",
+      "is_require_suppliers": false,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 8,
+        "name": "Документы правоспособности",
+        "name_ru": "Документы правоспособности",
+        "name_kk": "Документы правоспособности kz",
+        "egz_code": "5",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "19",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": null
+  },
+  {
+    "id": 241492791,
+    "external_id": 99054814,
+    "group": {
+      "id": 987,
+      "name": "Разрешения второй категории",
+      "is_require_suppliers": false,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 8,
+        "name": "Документы правоспособности",
+        "name_ru": "Документы правоспособности",
+        "name_kk": "Документы правоспособности kz",
+        "egz_code": "5",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "20",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": null
+  },
+  {
+    "id": 241492792,
+    "external_id": 99054815,
+    "group": {
+      "id": 988,
+      "name": "Свидетельства, сертификаты, дипломы и другие документы",
+      "is_require_suppliers": false,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 8,
+        "name": "Документы правоспособности",
+        "name_ru": "Документы правоспособности",
+        "name_kk": "Документы правоспособности kz",
+        "egz_code": "5",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "21",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": null
+  },
+  {
+    "id": 241492793,
+    "external_id": 99054816,
+    "group": {
+      "id": 985,
+      "name": "Свидетельство о постановке на учет по НДС",
+      "is_require_suppliers": false,
+      "is_require_subjects": false,
+      "is_visible_suppliers": true,
+      "is_visible_subjects": true,
+      "template_file": null,
+      "category": {
+        "id": 7,
+        "name": "Документы платежеспособности",
+        "name_ru": "Документы платежеспособности",
+        "name_kk": "Документы платежеспособности kz",
+        "egz_code": "4",
+        "mtw_code": null,
+        "skk_code": null
+      },
+      "egz_code": "18",
+      "mtw_code": null,
+      "skk_code": null
+    },
+    "is_require_suppliers": false,
+    "files": null
+  }
+]

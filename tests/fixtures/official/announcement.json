@@ -1,0 +1,37 @@
+{
+  "id": 40745436,
+  "external_id": 17746277,
+  "announcement_number": "17712609-2",
+  "name": "Приобретение кабинета информатики. Кабинет учебный с материально-техническим оснащением.",
+  "name_ru": "Приобретение кабинета информатики. Кабинет учебный с материально-техническим оснащением.",
+  "publish_date": 1791399858,
+  "offer_start_date": 1791518400,
+  "offer_end_date": 1792125000,
+  "status": {
+    "id": 6,
+    "name": "Опубликовано",
+    "is_active": true,
+    "egz_code": "210",
+    "mtw_code": "1",
+    "skk_code": "PUBLISHED"
+  },
+  "purchase_method": {
+    "id": 11,
+    "code": null,
+    "name": "Открытый конкурс",
+    "is_active": true,
+    "is_quasi": true,
+    "name_kk": "Ашық конкурс",
+    "name_ru": "Открытый конкурс",
+    "plan_type": null,
+    "egz_code": "2",
+    "mtw_code": null,
+    "skk_code": null
+  },
+  "system": {
+    "id": 1,
+    "name": "ЭГЗ"
+  },
+  "lot_count": 1,
+  "supplier": null
+}

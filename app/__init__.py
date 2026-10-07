@@ -1,0 +1,1 @@
+"""Official Kazakhstan procurement ingestion."""
