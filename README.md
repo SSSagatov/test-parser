@@ -1,307 +1,61 @@
-# Kazakhstan Procurement Parser
+# Лоты госзакупок Павлодарской области
 
-An async Python 3.12+ crawler for **real, official Kazakhstan public procurement
-data**. It observes JSON traffic on the JavaScript portal, prefers a permitted
-API, and falls back to Playwright. PostgreSQL stores original records, document
-text, validation, risk explanations and transactional crawl checkpoints.
+CLI получает объявления и лоты через официальный GraphQL V3, оставляет закупки с приёмом заявок в заданном временном окне, проверяет фактические места поставки по КАТО и сохраняет JSON и Excel. Источник: [схема GraphQL V3](https://ows.goszakup.gov.kz/help/v3/schema/) и [документация портала](https://goszakup.gov.kz/ru/developer/ows_v3).
 
-**Status:** implemented and tested locally, including a live end-to-end crawl
-of one official lot, nine successfully parsed attachments, SQLite persistence
-and a verified two-sheet Excel export. The specification retained approximately
-192,000 characters without truncation. This is not production certification or a demonstrated
-100,000-record benchmark. External integration limits are stated below.
+## Установка в Windows 11 / PowerShell
 
-## Official access constraints
+Требуется Python 3.12 или новее и локальный токен доступа к официальному API.
 
-Research date: **8 October 2026**. See [verified routes and evidence](docs/portal-research.md).
-
-- [zakup.gov.kz](https://zakup.gov.kz/) renders through JavaScript. Its current
-  [robots.txt](https://zakup.gov.kz/robots.txt) disallows direct `/api/` crawling.
-  Automatic mode observes normal browser traffic but does not replay a forbidden
-  endpoint. It uses the permitted [official legacy portal](https://old.goszakup.gov.kz/ru/search/lots),
-  respecting its five-second crawl delay.
-- Public search has a **10,000-result window**. A capped search raises an explicit
-  incomplete-crawl error. It is never reported as a complete large dataset.
-- Bulk ingestion uses [OWS v3 GraphQL](https://old.goszakup.gov.kz/ru/developer/ows_v3),
-  with `after` keyset pagination and up to 200 records per page. The Electronic
-  Finance Center must issue `OWS_TOKEN`; an anonymous crawler cannot acquire this
-  authorization automatically.
-- The portal exposes **ENSTRU, not CPV**. `--cpv` reports an unsupported filter;
-  no mapping is invented. Classification text never replaces a specification.
-
-## Docker quick start
-
-Requires a running Docker Engine and Compose **2.24+**. No `.env` is needed for
-the default local stack:
-
-```sh
-docker compose up --build
+```powershell
+cd 'C:\путь\к\ai-gov-parser'
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -e '.[test]'
+Copy-Item .env.example .env
+notepad .env
 ```
 
-Compose starts PostgreSQL, waits for readiness, applies Alembic migrations, then
-runs `crawl --export excel`. Named volumes persist data and logs; PostgreSQL is
-not exposed on the host network. The image includes Chromium, Tesseract with
-Russian/Kazakh/English packs, LibreOffice Writer and `unar`. Database credentials
-in the default stack are local development defaults.
+Укажите токен только в `GOSZAKUP_API_TOKEN` внутри `.env`. Файл игнорируется Git. Токен отправляется исключительно `https://ows.goszakup.gov.kz`; ответы и ошибки не выводят его в лог. Если политика PowerShell мешает активации, запускайте `.\.venv\Scripts\python.exe` вместо `python`.
 
-For a small first run and a resumable continuation:
-
-```sh
-docker compose up -d postgres
-docker compose run --rm crawler crawl --limit 10 --export excel
-docker compose run --rm crawler crawl --resume --limit 10 --export json
-docker compose run --rm crawler doctor
+```powershell
+python -m goszakup --test-connection
+python -m goszakup
+python -m goszakup --mode active_now
+python -m goszakup --mode ends_in_window
+python -m goszakup --mode overlaps_window
+python -m goszakup --date 2026-10-15
+python -m goszakup --resume
+python -m pytest -q
 ```
 
-Repeat identical filters/source when resuming:
+`--date` задаёт начало двухдневного окна; прошедшая дата запрещена, потому что API возвращает текущее состояние, а не исторический снимок. По умолчанию используется текущая дата `Asia/Almaty`. `WINDOW_DAYS` меняет ширину окна, `DATE_MODE` выбирает режим. По умолчанию `starts_in_window`: дата начала приёма заявок должна приходиться на сегодня или завтра. Режим `--mode active_now` выбирает все объявления с открытым сейчас приёмом и пересечением с `[00:00 сегодня, 00:00 послезавтра)`; в нём оказываются и лоты, приём которых начался раньше сегодня. Все режимы также ограничены текущими статусами открытого приёма API: объявление, у которого приём начнётся завтра, может ещё не иметь такого статуса и тогда не попадёт в выгрузку. Для повторной подачи учитываются `repeatStartDate` и `repeatEndDate`, если API их вернул.
 
-```sh
-docker compose run --rm crawler crawl --city Pavlodar --limit 50
-docker compose run --rm crawler crawl --city Pavlodar --resume --limit 50 --export excel
-```
+## Как работает отбор
 
-Copy exports from a retained Compose container, or bind a directory for a one-off run:
+1. Справочник `/v3/refs/ref_buy_status` даёт актуальные ID статусов с явным приёмом заявок или ценовых предложений. Без них работа останавливается. Коды населённых пунктов загружаются из официального `/v3/refs/ref_kato` и сохраняются в checkpoint для продолжения. Данные объявлений и лотов идут через GraphQL V3 портала госзакупок.
+2. `TrdBuy` запрашивается с `kato: [полные коды Павлодарской области]` группами по 100 кодов и `refBuyStatusId`. В реальном API `strKato: "55"` возвращает пустой результат, несмотря на описание поиска по части кода в схеме; `kato` с полными кодами проверен на реальных запросах. Курсор `after` в фактическом ответе идёт по убыванию ID. В `TrdBuyFiltersInput` нет фильтров `startDate`/`endDate`; даты проверяются после узкого запроса.
+3. Для подходящих объявлений `Lots` запрашивается через `trdBuyId`. Первичный ответ содержит ID, КАТО и минимальные геоданные пунктов плана. Подробности загружаются только для лотов, которые ещё могут соответствовать региону.
+4. Дополнительно проверяется источник по `systemId` объявления и лота. По [официальной документации OWS](https://ows.goszakup.gov.kz/help/) значения 1, 2 и 3 обозначают модули госзакупок; другой или отсутствующий код исключается. В `TrdBuyFiltersInput` и `LotsFiltersInput` GraphQL V3 нет серверного фильтра `systemId`, поэтому эта проверка выполняется сразу после получения записей и повторяется для подробного лота. При `--resume` ранее сохранённые записи также проверяются. Переключатель площадок на единой платформе закупок не является параметром GraphQL V3 OWS; его значение нельзя передать в этот API напрямую.
+5. Подробный лот проверяется по `Plans.PlansKato.refKatoCode`, то есть по месту поставки пункта плана. Коды вне области исключаются. Пустые, некорректные или смешанные географические данные попадают в `Review_Required`. Пустая строка в `plnPointKatoList` считается отсутствующим кодом, если точное место поставки есть в `PlansKato`. `Plans.isQvazi = 1` исключается; неизвестное значение требует проверки.
+5. Сведения об отмене или приостановлении отправляют лот на проверку. Подробный запрос включает скалярные поля `Lots`, `TrdBuy`, `Plans`, документы, места поставки, спецификации, справочники статусов и методов. Исходный ответ сохраняется вложенным в JSON. Не предусмотренные GraphQL поля (например, валюта или НДС там, где их нет в схеме лота) не домысливаются.
 
-```sh
-docker compose cp crawler:/app/data/exports ./exports
-docker compose run --rm -v "./exports:/app/data/exports" crawler crawl --limit 10 --export excel
-```
+Серверная фильтрация по полным кодам КАТО и статусам проверена с реальным API. Итоговые файлы создаются только после прохода всех страниц и подробностей. API не предоставляет исторический снимок или доказательство глобальной полноты. Если GraphQL возвращает `null` при `totalCount=0`, это считается пустой страницей; другие неожиданные `null` останавливают выгрузку.
 
-## Native installation
+## Выходные файлы
 
-Install Python 3.12+, PostgreSQL and uv. Run from the project root:
+В `OUTPUT_DIR` создаются `pavlodar_lots_YYYY-MM-DD.json`, промежуточный `.jsonl` и `.xlsx`. Для режимов, отличных от `starts_in_window`, к имени добавляется название режима, например `_active_now`, чтобы не перезаписать обычную выгрузку. JSON содержит `statistics`, `lots` и `review_required`. Excel содержит листы `Lots`, `Full_Data`, `Documents`, `Review_Required`, `Statistics`. Лист `Lots` содержит отдельный столбец «Текст технической спецификации» и столбец статуса извлечения. Парсер скачивает только относящиеся к конкретному лоту файлы с официального OWS и извлекает текст из PDF, DOCX, XLSX и старых DOC. Страницы PDF без текстового слоя распознаются локальным OCR. При первом OCR модели загружаются в `OUTPUT_DIR/.ocr_models`; качество распознавания сканов следует проверить по оригиналу. Если текст длиннее 30 000 символов, он продолжается в соседних нумерованных столбцах без усечения. Повторно обработанные файлы берутся из локального `OUTPUT_DIR/.spec_cache`. Отсутствие файла или ошибка извлечения отображаются в статусе. Большие идентификаторы записываются текстом; массивы и вложенные структуры сериализуются как JSON, длинные значения разбиваются на нумерованные столбцы. Суммы API имеют тип GraphQL `Float`, поэтому их исходная точность ограничена самим API. Ссылка на объявление ведёт на карточку портала. Ссылка на лот строится по маршруту портала `/ru/subpriceoffer/index/{announcement_id}/{lot_id}`; при отсутствии ID используется поиск по номеру лота. Ссылки следует проверить на реальных данных при первом запуске.
 
-```sh
-uv sync --frozen
-uv run playwright install chromium
-```
+В статистике `candidates` — все лоты объявлений, выбранных по КАТО; некоторые из этих лотов доставляются за пределы Павлодарской области. `excluded_candidates` показывает число исключённых после проверки лота, а `excluded_outside_region`, `excluded_quasi` и `excluded_other` раскрывают причины по данным первичной проверки. `lots_after_exclusions` — оставшиеся подтверждённые лоты и записи `Review_Required` вместе. Это число нельзя напрямую сравнивать с надписью «Найдено лотов» на `zakup.gov.kz`: у страницы из примера пользователя есть фильтры `delivery_address_id__in=15970`, `offer_start_date__gte/lte` и `system_id__in=1`, но нет фильтра открытого приёма. Парсер дополнительно проверяет статус, места поставки по данным GraphQL и `isQvazi`. Источники обновляются в разное время. Кроме того, `system_id__in=1` на единой платформе означает площадку «Госзакупки», а `systemId` 1–3 в OWS обозначают модули самой системы госзакупок; одинаковые номера этих параметров не означают одинаковый фильтр.
 
-Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), set
-the PostgreSQL URL, then:
+Промежуточное состояние хранится в SQLite `checkpoint_YYYY-MM-DD_MODE.sqlite3` внутри `OUTPUT_DIR`. Запуск без `--resume` начинает соответствующий режим заново. `--resume` продолжает сохранённые этапы и отвергает checkpoint с другими параметрами. Неуспешные HTTP/GraphQL-запросы останавливают экспорт; частичный ответ не считается полным. При HTTP 429/5xx и временных сетевых ошибках выполняются повторы с экспоненциальной задержкой. Число параллельных запросов подробностей ограничено `MAX_CONCURRENT_REQUESTS`.
 
-```sh
-uv run python main.py init-db
-uv run python main.py doctor
-uv run python main.py crawl --limit 10 --export excel
-```
+## Типичные ошибки и ограничения
 
-Native OCR requires Tesseract and configured language packs on `PATH`. Legacy
-DOC requires LibreOffice; compressed RAR requires `unar`/`unrar`. Missing binaries
-produce explicit parsing errors and retain original files. Docker installs these
-dependencies automatically. SQLite is used only for tests and local smoke checks.
+- `GOSZAKUP_API_TOKEN отсутствует`: заполните локальный `.env`.
+- HTTP 401/403: проверьте срок действия токена и доступ к API.
+- HTTP 429/5xx: после исчерпания повторов используйте `--resume`.
+- GraphQL `errors`: проверьте актуальность [схемы V3](https://ows.goszakup.gov.kz/help/v3/schema/) и полей запроса; частичные данные не экспортируются.
+- Пустой `Review_Required` не доказывает, что на портале нет иных лотов. Даты приёма не фильтруются на сервере, а `kato` и статусы зависят от индекса API.
+- Текст техспецификации извлекается из приложенных файлов PDF, DOCX, XLSX и DOC. OCR сканов может ошибаться в символах и порядке чтения таблиц; такие строки отмечаются статусом «Извлечено (OCR)». Если один технический файл приложен к объявлению без указания ID лота, он отмечается как общий и требует проверки применимости к конкретному лоту. Пустой текст или ошибка у отдельного лота объясняется в столбце «Статус техспецификации». Поля `PlansSpec` содержат данные пункта плана, а не текст приложенной техспецификации.
 
-## CLI examples
-
-`uv run procurement-parser` and `uv run python main.py` expose the same CLI:
-
-```sh
-uv run procurement-parser crawl
-uv run procurement-parser crawl --region Pavlodar
-uv run procurement-parser crawl --keyword software
-uv run procurement-parser crawl --status active
-uv run procurement-parser crawl --city Pavlodar --export excel
-uv run procurement-parser crawl --budget-min 0 --budget-max 500000
-uv run procurement-parser crawl --date-from 2026-10-01 --date-to 2026-10-09
-uv run procurement-parser crawl --method "Запрос ценовых предложений" --limit 5000
-uv run procurement-parser crawl --customer OFFICIAL_BIN --supplier OFFICIAL_NAME
-uv run procurement-parser crawl --announcement-number NUMBER --lot-number NUMBER
-uv run procurement-parser crawl --resume --limit 5000
-uv run procurement-parser crawl --source ows --limit 100000 --export json
-uv run procurement-parser export --format csv --run-id RUN_UUID
-uv run procurement-parser export --format markdown --run-id RUN_UUID --valid-only
-uv run procurement-parser export --format json --run-id RUN_UUID --include-filtered
-uv run procurement-parser discover
-uv run procurement-parser doctor
-```
-
-`--limit` counts candidates in that invocation, including invalid, filtered and
-duplicate observations. A pending-page snapshot is saved before work; reaching
-the limit pauses the run. Without a limit, crawling continues until exhaustion
-or an explicit source restriction. Completed runs are not resumed accidentally.
-
-Verified server filters reduce traffic; other requested predicates are checked
-against enriched official records. **Missing evidence cannot satisfy a filter.**
-Supplier filters may return no matches on open lots without a stated supplier.
-Date filters concern publication, not submission. Date-only bounds mean midnight
-in `TIMEZONE`; specify ISO timestamps for precise boundaries. Region filtering
-is broader than the strict Pavlodar city rule.
-
-## Architecture
-
-```mermaid
-flowchart LR
-  CLI[Typer CLI] --> Source[JSON discovery and source selection]
-  Source --> API[Permitted public JSON / authorized OWS]
-  Source --> Browser[Playwright official pages]
-  API --> Engine[Bounded crawl engine]
-  Browser --> Engine
-  Engine --> Documents[Downloads / parsing / OCR]
-  Documents --> Validation[Validation and risk]
-  Validation --> Repository[Records and checkpoint transaction]
-  Repository --> PG[(PostgreSQL)]
-  PG --> Export[Excel / CSV / JSON / Markdown]
-```
-
-```text
-app/
-  config/                  typed environment settings
-  models/                  Pydantic source and analysis contracts
-  crawler/
-    api/                   public JSON and OWS GraphQL
-    browser/               Playwright and endpoint discovery
-    pagination/            durable pending-page snapshots
-    http.py                trusted requests, robots, pacing and retries
-    documents.py           bounded downloads and immutable originals
-    engine.py              transactional orchestration
-  parser/
-    html/ pdf/ docx/ xlsx/  source/document parsers
-    documents.py           format detection and archive traversal
-    specification.py       full text and explicit labelled requirements
-  validator/               submission, source, location and filters
-  risk/                    rules independent of budget
-  database/                SQLAlchemy models and async pooling
-  repository/              batch upserts and audit snapshots
-  export/                  streaming Excel, CSV, JSON and Markdown
-  utils/                   UTC time, URLs and structured logging
-tests/fixtures/official/   reduced real source captures with provenance
-migrations/                versioned Alembic migrations
-docker/                    image and migration entrypoint
-logs/                      rotating structured audit logs
-main.py                    CLI entrypoint
-```
-
-Adapters, transport, document processing and repositories are injected. The
-engine retains at most a page and a bounded work batch; exports use database
-keyset reads and an OpenPyXL write-only workbook. Downloads have their own
-concurrency bound; source caches are bounded. These properties support large
-jobs without retaining every lot in memory, but do not bypass source limits.
-
-## Integrity and validation
-
-UUID/timestamp models include `Announcement`, `Lot`, `Customer`, `Supplier`,
-`Document`, `Attachment`, `Specification`, `RiskAssessment`, `ExportHistory`,
-plus run, relationship and duplicate-audit tables. A batch and its checkpoint
-commit together. Failed writes preserve pending rows. Resume uses the last
-committed state, including when the source page has since changed.
-
-Validity requires an available official source, an explicitly active status and
-`submission_start <= now < submission_deadline`. Cancelled/completed
-announcements override active-looking lots. A status dictionary's `is_active`
-flag is not evidence of open bidding. Invalid lots retain reasons. Duplicate
-observations are separately marked invalid with `DUPLICATE`, preserving the
-canonical record. Identity includes **announcement number and lot number**:
-the same lot number can occur in different announcement revisions.
-
-Pavlodar city requires verified official delivery/work/service text containing
-**`г. Павлодар`**. Customer addresses, province names alone and guesses do not
-qualify. Missing proof yields `LOCATION_NOT_VERIFIED`. Nonmatching examined lots
-remain stored for audit; exports honor the saved filter result. `--valid-only`
-additionally removes invalid matches; `--include-filtered` includes nonmatching
-observations when an audit of rejected candidates is needed.
-
-Malformed schemas/identities are ingestion errors that preserve the checkpoint,
-distinct from business-invalid records. Missing values stay missing.
-
-## Documents and specifications
-
-- PDF: all pages; native text plus automatic OCR for scanned/image-dominant
-  pages. Partial failures retain available text with `partial_errors`.
-- DOCX: paragraphs and tables. DOC: isolated headless LibreOffice conversion.
-- XLS/XLSX: all worksheets with bounded cell traversal. Stored values/formula
-  text are preserved; downloaded spreadsheet code is not executed.
-- ZIP/RAR: nested parsing with traversal/symlink protection and limits on
-  expanded bytes, member count and depth. Errors remain visible per document.
-- Original bytes are SHA-256-addressed immutable files. Text is retained before
-  producing an extractive preview. Nested named specifications keep provenance.
-
-Warranty, certificates, installation, payment and execution requirements come
-from official fields or explicit labelled text. This conservative extraction is
-not a general semantic contract parser. Unrecognized fields remain missing;
-full original text survives. OCR does not guarantee perfect transcription.
-
-Risk is LOW/MEDIUM/HIGH with reasons. Missing critical specifications, complex
-work and short deadlines produce HIGH; installation/certification/configuration
-requirements produce at least MEDIUM. LOW requires a recognized standard product,
-parsed specification and no detected special requirements. **Budget is never
-an input.** Risk is a rule-based triage result, not a professional guarantee.
-
-## Exports
-
-Excel has the requested **Procurements** and **Sources** worksheets, risk colors,
-source URLs, document links, verification times, validation reasons and missing
-data. CSV/Markdown include provenance; JSON preserves the complete record.
-
-Excel's 32,767-character cell limit is handled explicitly: each workbook has a
-**`.originals.jsonl` sidecar** with lossless complete records. Long cells point
-to it. Formula injection is neutralized for spreadsheet text. Output files are
-staged, published atomically and recorded with row count/SHA-256 in export history.
-
-## Configuration
-
-[`.env.example`](.env.example) contains every typed default and commented optional
-setting; never commit `.env` or credentials. Arrays use JSON syntax.
-
-| Group | Environment settings |
-| --- | --- |
-| Database | `DATABASE_URL`, `DATABASE_POOL_SIZE`, `DATABASE_BATCH_SIZE` |
-| Sources | `PORTAL_URL`, `LEGACY_PORTAL_URL`, `OFFICIAL_HOSTS`, `SEARCH_URL`, `SOURCE_MODE` |
-| APIs | `OWS_URL`, `OWS_TOKEN`, `PUBLIC_API_PATH`, `PUBLIC_SYSTEM_NAME`, `PUBLIC_RESULT_WINDOW` |
-| Network | `REQUEST_TIMEOUT`, `RETRY_ATTEMPTS`, `RETRY_MAX_WAIT`, `CONCURRENCY`, `DOWNLOAD_CONCURRENCY`, `REQUESTS_PER_SECOND`, `PROXY` |
-| Browser/policy | `BROWSER`, `BROWSER_HEADLESS`, `BROWSER_WAIT_MS`, `RESPECT_ROBOTS`, `USER_AGENT` |
-| Files | `DOWNLOAD_FOLDER`, `EXPORT_FOLDER`, `LOG_FOLDER`, byte/archive/PDF/spreadsheet limits |
-| OCR/Office | `OCR_LANGUAGES`, `OCR_DPI`, `OCR_TIMEOUT`, `TESSERACT_BINARY`, `LIBREOFFICE_BINARY`, OCR thresholds |
-| Validation | `TIMEZONE`, `ACTIVE_STATUSES`, `INACTIVE_STATUS_FRAGMENTS`, `PAVLODAR_PATTERN` |
-| Risk/size | `RISK_HIGH_TERMS`, `RISK_MEDIUM_TERMS`, `RISK_STANDARD_TERMS`, `STRICT_DEADLINE_DAYS`, `SUMMARY_CHARACTERS`, `API_ANNOUNCEMENT_CACHE_SIZE`, `PAGE_SIZE` |
-
-Changing a robots setting does not grant authorization. Defaults enforce the
-published policy; use legitimate OWS access for bulk collection.
-
-## Verification
-
-```sh
-uv run pytest -q
-uv run ruff check app tests scripts main.py docker
-uv run ruff format --check app tests scripts main.py docker
-docker compose config --quiet
-```
-
-Tests cover real source captures, pagination, partial-page resume, cancellation,
-database rollback, duplicate audits, location/date boundaries, robots/redirects,
-retry limits, document bounds, OCR selection, archives and export safety.
-Constructed unit-test inputs are labelled and never used as live procurement data.
-`TEST_DATABASE_URL` enables an isolated-schema PostgreSQL integration test.
-
-The complete verification suite passed **213 tests**, with the PostgreSQL test
-skipped because no server was configured. Ruff and Compose configuration checks
-also passed. The live source export is in `data/exports/live-smoke/`; its adjacent
-`.originals.jsonl` preserves the complete original specification and provenance.
-
-The development host reported **Docker Desktop is unable to start**. Compose
-configuration and migration SQL were checked, but the image/runtime and real
-PostgreSQL transactions were not verified here. OWS live integration requires a
-token. Actual Tesseract, LibreOffice, legacy XLS input and compressed RAR require
-their external integration checks; corresponding failure paths are tested.
-100,000-record throughput has not been benchmarked.
-
-## Troubleshooting
-
-| Symptom | Action |
-| --- | --- |
-| Docker cannot start | Repair/start Docker Engine; Compose configuration validation alone does not run containers. |
-| Missing migration table / database unavailable | Start PostgreSQL, check its URL and run `init-db`. |
-| API blocked by robots | Use automatic/browser mode or authorized OWS. Discovery is not permission to replay. |
-| Search-window exception | Narrow filters or use OWS; export committed records by run UUID. |
-| No resumable run | Repeat identical filters/source; a completed job starts a new run. |
-| Browser missing | Run `playwright install chromium`; install OS dependencies or use Docker. |
-| OCR/DOC/RAR unavailable | Run `doctor`; install the executable/language packs or use the image. |
-| No location/supplier/date matches | Inspect missing evidence; the crawler does not guess. |
-| Source schema error | Inspect source/logs, update the adapter, then resume. |
-| Windows sandbox cannot find Python | The virtual environment's base Python may be outside the sandbox; use a normal terminal or an accessible interpreter. |
-
-## Screenshot placeholders
-
-- `[Screenshot placeholder: CLI statistics and run UUID]`
-- `[Screenshot placeholder: Excel Procurements with risk colors]`
-- `[Screenshot placeholder: Sources with validation and documents]`
-
-These are documentation slots, not fabricated run evidence.
+При наличии локального токена интеграционная проверка: `python -m goszakup --test-connection`, затем основной запуск на текущую дату и ручная сверка нескольких лотов и ссылок с порталом. Без токена выполняются только тесты с поддельными ответами.
